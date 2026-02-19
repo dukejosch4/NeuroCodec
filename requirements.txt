@@ -1,0 +1,10 @@
+torch>=2.0
+numpy<2
+einops
+diffusers>=0.25
+transformers
+accelerate
+lpips
+scikit-image
+matplotlib
+Pillow
