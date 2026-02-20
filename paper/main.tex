@@ -1,5 +1,9 @@
 \documentclass{article}
 
+% --- arXiv metadata ---
+% Primary: cs.CV (Computer Vision)
+% Secondary: cs.LG (Machine Learning), cs.AI (Artificial Intelligence)
+
 % --- Packages ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -58,10 +62,10 @@ over two orders of magnitude lower per-frame latency than a 50-step
 UNet diffusion decoder (1.98\,ms vs.\ 1{,}026\,ms on A100), while
 maintaining stable multi-step rollouts (1.39$\times$ error ratio,
 defined as MSE at frame~8 / MSE at frame~1).
-A spectral frequency-matching loss recovers suppressed latent variance
-(std ratio $0.55{\to}0.83$ average), reducing perceptual distance from
-LPIPS~0.223 to 0.177---within 3.5\% of the copy baseline's 0.171,
-despite copy using ground-truth VAE encodings.
+A spectral frequency-matching loss recovers 56\% of suppressed latent
+variance (ratio deviation $0.260{\to}0.113$), reducing perceptual
+distance from LPIPS~0.223 to 0.177---within 3.5\% of the copy
+baseline's 0.171, despite copy using ground-truth VAE encodings.
 Systematic evaluation of six improvement strategies reveals a key
 insight for the field: predicted latents lie off the VAE decoder's data
 manifold, and no latent-space loss---including end-to-end pixel
@@ -70,7 +74,7 @@ Ablation experiments across three random seeds confirm that the residual
 update principle is essential (+225\% MSE without it), slot-based
 cross-attention stabilizes rollouts (3.16$\times$ degradation without
 slots), and event segmentation provides robustness at scene boundaries.
-Code is available at \url{https://github.com/jhaertel/NeuroCodec}.
+Code is available at \url{https://github.com/dukejosch4/NeuroCodec}.
 \end{abstract}
 
 % ====================================================================
@@ -375,12 +379,12 @@ V3 Full Decoder
   & 0.725
   & 0.711 \\
 Residual V2
-  & 0.190 $\pm$ .0004
-  & 0.366 $\pm$ .003
+  & \textbf{0.190} $\pm$ .0004
+  & \textbf{0.366} $\pm$ .003
   & \textbf{0.216} $\pm$ .0004 \\
-\textbf{Hybrid (Ours)}
+Hybrid (Ours)
   & \textbf{0.190} $\pm$ .0007
-  & \textbf{0.388} $\pm$ .002
+  & 0.388 $\pm$ .002
   & 0.220 $\pm$ .0008 \\
 \bottomrule
 \end{tabular}
@@ -875,11 +879,6 @@ as loose metaphors but as actionable architectural blueprints.
 \bibliographystyle{plain}
 \begin{thebibliography}{99}
 
-\bibitem{bruce2024genie}
-J.~Bruce \textit{et al.}
-\newblock Genie: Generative interactive environments.
-\newblock \textit{ICML}, 2024.
-
 \bibitem{bengio2015scheduled}
 S.~Bengio \textit{et al.}
 \newblock Scheduled sampling for sequence prediction with recurrent neural networks.
@@ -889,6 +888,11 @@ S.~Bengio \textit{et al.}
 A.~Blattmann \textit{et al.}
 \newblock Stable Video Diffusion: Scaling latent video diffusion models to large datasets.
 \newblock \textit{arXiv:2311.15127}, 2023.
+
+\bibitem{bruce2024genie}
+J.~Bruce \textit{et al.}
+\newblock Genie: Generative interactive environments.
+\newblock \textit{ICML}, 2024.
 
 \bibitem{caucheteux2023evidence}
 C.~Caucheteux \textit{et al.}
@@ -975,11 +979,6 @@ C.~Tan \textit{et al.}
 \newblock Temporal attention unit: Towards efficient spatiotemporal predictive learning.
 \newblock \textit{CVPR}, 2023.
 
-\bibitem{wu2023slotformer}
-Z.~Wu \textit{et al.}
-\newblock SlotFormer: Unsupervised visual dynamics simulation with object-centric models.
-\newblock \textit{ICLR}, 2023.
-
 \bibitem{wang2022predrnn}
 Y.~Wang \textit{et al.}
 \newblock PredRNN: A recurrent neural network for spatiotemporal predictive learning.
@@ -989,6 +988,11 @@ Y.~Wang \textit{et al.}
 T.~Wiegand \textit{et al.}
 \newblock Overview of the H.264/AVC video coding standard.
 \newblock \textit{IEEE TCSVT}, 13(7):560--576, 2003.
+
+\bibitem{wu2023slotformer}
+Z.~Wu \textit{et al.}
+\newblock SlotFormer: Unsupervised visual dynamics simulation with object-centric models.
+\newblock \textit{ICLR}, 2023.
 
 \bibitem{yan2021videogpt}
 W.~Yan \textit{et al.}
