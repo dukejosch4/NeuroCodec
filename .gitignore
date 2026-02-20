@@ -31,34 +31,28 @@ run_*.sh
 start-*.sh
 stufe*.py
 
-# Experiment result files (summarized in results/)
-c0_*.json
-c0_*.png
-c0_*.txt
-d0_*.json
-d0_*.png
-d0b_*.png
-d1_*.json
-d1_*.png
-d2_*.json
-d2_*.png
-d2_*.py
-e0_*.json
-e0_*.png
-e1_*.json
-e1_*.png
-e2_*.json
-e2_*.png
-e2e_*.json
-e2e_*.png
-e3_*.json
-e3_*.png
-e4_*.json
-e4_*.png
-e5_*.json
-e5_*.png
-e5b_*.json
-e5b_*.png
+# Experiment result files in root (clean copies in results/)
+/c0_*
+/d0_*
+/d0b_*
+/d1_*
+/d2_*
+/e0_*
+/e1_*
+/e2_*
+/e2e_*
+/e3_*
+/e4_*
+/e5_*
+/e5b_*
+
+# Allow results subdirectories
+!results/json/
+!results/json/*.json
+!results/figures/
+!results/figures/*.png
+!results/demo/
+!results/demo/*
 
 # Jupyter notebooks (messy experiment notebooks)
 *.ipynb
@@ -77,7 +71,7 @@ PROJEKT_WISSENSBASIS.md
 REMNOTE_BRAIN.md
 REMNOTE_BRAIN_GUIDE.md
 ROADMAP_WEG2_ENDTOEND.md
-research_findings.md
+# research_findings.md is included in repo
 
 # Python
 __pycache__/

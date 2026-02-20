@@ -1,0 +1,81 @@
+{
+  "pixel_quality": {
+    "decoder_ceiling_ssim": 0.5188510417938232,
+    "decoder_ceiling_psnr": 16.33167266845703,
+    "neurocodec_ssim": 0.4493725895881653,
+    "neurocodec_psnr": 14.886073112487793,
+    "copy_baseline_ssim": 0.6380376815795898,
+    "copy_baseline_psnr": 17.39699935913086
+  },
+  "dynamics": {
+    "val_mse": 0.04184730589389801,
+    "copy_mse": 0.04940006881952286,
+    "improvement_pct": 15.308033569795931,
+    "cosine_sim": 0.9576094746589661,
+    "predictable_pct": 97.7756679058075,
+    "event_boundary_pct": 15.000000596046448,
+    "n_params": 437760,
+    "train_time_s": 151.288015127182
+  },
+  "efficiency": {
+    "dynamics_ms": 0.648033618927002,
+    "decoder_ms": 44.00575399398804,
+    "encoder_ms": 3.7043333053588867,
+    "neurocodec_predicted_ms": 44.65378761291504,
+    "neurocodec_keyframe_ms": 47.710087299346924,
+    "baseline_50step_ms": 185.21666526794434,
+    "speedup_predicted": 4.147837734919823,
+    "flop_ratio": 32.0
+  },
+  "per_video": [
+    {
+      "vid_idx": 2,
+      "ssim_recon": 0.6128780245780945,
+      "ssim_pred": 0.5369740724563599,
+      "ssim_copy": 0.6835265755653381
+    },
+    {
+      "vid_idx": 182,
+      "ssim_recon": 0.4308668076992035,
+      "ssim_pred": 0.3569331169128418,
+      "ssim_copy": 0.6612653732299805
+    },
+    {
+      "vid_idx": 361,
+      "ssim_recon": 0.4576664865016937,
+      "ssim_pred": 0.39692091941833496,
+      "ssim_copy": 0.7286569476127625
+    },
+    {
+      "vid_idx": 545,
+      "ssim_recon": 0.4318786561489105,
+      "ssim_pred": 0.3985614776611328,
+      "ssim_copy": 0.7931962609291077
+    },
+    {
+      "vid_idx": 739,
+      "ssim_recon": 0.5355376601219177,
+      "ssim_pred": 0.41577863693237305,
+      "ssim_copy": 0.44215402007102966
+    },
+    {
+      "vid_idx": 918,
+      "ssim_recon": 0.5691630244255066,
+      "ssim_pred": 0.4836048185825348,
+      "ssim_copy": 0.7122326493263245
+    },
+    {
+      "vid_idx": 1114,
+      "ssim_recon": 0.47671017050743103,
+      "ssim_pred": 0.42425259947776794,
+      "ssim_copy": 0.43798020482063293
+    },
+    {
+      "vid_idx": 1314,
+      "ssim_recon": 0.6361075043678284,
+      "ssim_pred": 0.5819548964500427,
+      "ssim_copy": 0.6452895998954773
+    }
+  ],
+  "total_time_min": 5.6373863617579145
+}

@@ -1,0 +1,36 @@
+{
+  "decision": "NO-GO",
+  "variance": {
+    "var_latent": 1.5308890342712402,
+    "var_delta_latent": 0.34324216842651367,
+    "ratio": 0.22421100467932323,
+    "var_slots": 0.5274194478988647,
+    "var_delta_slots": 0.04919843003153801,
+    "ratio_slots": 0.09328141051213577
+  },
+  "correlation": {
+    "magnitude_corr": 0.1413249522447586,
+    "random_proj_cos": 0.00013068180123809725
+  },
+  "spatial": {
+    "positions_for_80pct": 771,
+    "pct_positions": 75.29296875
+  },
+  "methods": {
+    "copy_mse": 0.3432425856590271,
+    "linear_mse": 0.34264686703681946,
+    "linear_improvement": 0.17355615156664506,
+    "linear_r2": 0.025926685027810037,
+    "mlp_mse": 0.344094842672348,
+    "mlp_improvement": -0.2482958260218826,
+    "mlp_r2": 0.021810381757550235,
+    "crossattn_mse": 0.22761382043361664,
+    "crossattn_improvement": 33.68718511527431,
+    "crossattn_r2": 0.35381077432036634
+  },
+  "pixel": {
+    "ssim_copy": 0.7660608291625977,
+    "ssim_residual": 0.7648686170578003
+  },
+  "time_min": 3.9925469557444253
+}

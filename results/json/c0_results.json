@@ -1,0 +1,16 @@
+{
+  "decision": "NO-GO",
+  "latent_fid": 4637.215089939416,
+  "ks_ratio": 0.0,
+  "diversity_ratio": 0.7348738197848689,
+  "nn_ratio": 0.8389232054575126,
+  "best_val_loss": 0.07401198666280424,
+  "best_epoch": 379.0,
+  "train_time_min": 20.381153571605683,
+  "total_time_min": 22.71643706957499,
+  "slot_dim": 128.0,
+  "n_slots": 64.0,
+  "n_train": 10060.0,
+  "n_generate": 500.0,
+  "model_params": 7840384.0
+}

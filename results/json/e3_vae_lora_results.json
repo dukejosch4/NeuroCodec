@@ -1,0 +1,1481 @@
+{
+  "phase": "E3",
+  "description": "VAE LoRA \u2014 Fine-tune CogVideoX VAE decoder for predicted latents",
+  "config": {
+    "lora_rank": 4,
+    "lora_alpha": 1.0,
+    "n_adapted_layers": 113,
+    "n_lora_params": 285696,
+    "n_train_lora": 200,
+    "n_val_lora": 50,
+    "n_steps": 200,
+    "lr": 0.0001,
+    "grad_accum": 4,
+    "loss": "L1 only",
+    "oom_count": 6
+  },
+  "vae_decoder_info": {
+    "total_params_M": 123.368451,
+    "n_conv3d_layers": 114,
+    "conv3d_details": [
+      {
+        "name": "conv_in.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 221184
+      },
+      {
+        "name": "mid_block.resnets.0.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.0.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.0.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.0.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.0.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "mid_block.resnets.0.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "mid_block.resnets.1.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.1.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.1.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.1.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "mid_block.resnets.1.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "mid_block.resnets.1.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.0.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.0.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.0.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.0.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.0.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.0.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.1.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.1.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.1.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.1.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.1.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.1.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.2.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.2.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.2.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.2.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.2.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.2.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.3.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.3.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.3.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.3.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.0.resnets.3.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.0.resnets.3.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 512,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 7077888
+      },
+      {
+        "name": "up_blocks.1.resnets.0.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.1.resnets.0.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 512,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 8192
+      },
+      {
+        "name": "up_blocks.1.resnets.0.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.0.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.0.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 3538944
+      },
+      {
+        "name": "up_blocks.1.resnets.0.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.1.resnets.0.conv_shortcut",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 512,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 131072
+      },
+      {
+        "name": "up_blocks.1.resnets.1.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.1.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.1.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.1.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.1.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.1.resnets.1.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.1.resnets.2.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.2.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.2.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.2.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.2.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.1.resnets.2.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.1.resnets.3.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.3.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.3.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.3.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.1.resnets.3.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.1.resnets.3.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.0.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.0.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.0.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.0.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.0.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.0.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.1.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.1.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.1.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.1.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.1.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.1.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.2.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.2.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.2.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.2.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.2.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.2.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.3.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.3.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.3.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.3.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.2.resnets.3.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.2.resnets.3.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 256,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 1769472
+      },
+      {
+        "name": "up_blocks.3.resnets.0.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.3.resnets.0.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 256,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 4096
+      },
+      {
+        "name": "up_blocks.3.resnets.0.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.0.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.0.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 884736
+      },
+      {
+        "name": "up_blocks.3.resnets.0.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "up_blocks.3.resnets.0.conv_shortcut",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 256,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 32768
+      },
+      {
+        "name": "up_blocks.3.resnets.1.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.1.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.1.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.1.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.1.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "up_blocks.3.resnets.1.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "up_blocks.3.resnets.2.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.2.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.2.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.2.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.2.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "up_blocks.3.resnets.2.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "up_blocks.3.resnets.3.norm1.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.3.norm1.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.3.norm2.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.3.norm2.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "up_blocks.3.resnets.3.conv1.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "up_blocks.3.resnets.3.conv2.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 128,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 442368
+      },
+      {
+        "name": "norm_out.conv_y.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "norm_out.conv_b.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 16,
+        "out_c": 128,
+        "kernel": [
+          1,
+          1,
+          1
+        ],
+        "params": 2048
+      },
+      {
+        "name": "conv_out.conv",
+        "type": "CogVideoXSafeConv3d",
+        "in_c": 128,
+        "out_c": 3,
+        "kernel": [
+          3,
+          3,
+          3
+        ],
+        "params": 10368
+      }
+    ]
+  },
+  "baseline_metrics": {
+    "copy": {
+      "ssim_mean": 0.8029523491859436,
+      "lpips_mean": 0.128523569367826
+    },
+    "orig_vae_pred": {
+      "ssim_mean": 0.8246214985847473,
+      "lpips_mean": 0.14286193691194057
+    }
+  },
+  "lora_metrics": {
+    "ssim_mean": 0.8246210217475891,
+    "ssim_std": 0.12982261180877686,
+    "lpips_mean": 0.14286048624664546,
+    "lpips_std": 0.10074375464825996
+  },
+  "improvement": {
+    "lpips_abs": 0.0,
+    "lpips_pct": 0.0,
+    "ssim_delta": 0.0
+  },
+  "eval_all_methods": {
+    "GT (ceiling)": {
+      "ssim_mean": 1.0,
+      "ssim_std": 0.0,
+      "lpips_mean": 0.0,
+      "lpips_std": 0.0
+    },
+    "Orig VAE + Pred": {
+      "ssim_mean": 0.8246210217475891,
+      "ssim_std": 0.12982261180877686,
+      "lpips_mean": 0.14286048624664546,
+      "lpips_std": 0.10074375464825996
+    },
+    "LoRA VAE + Pred": {
+      "ssim_mean": 0.8246210217475891,
+      "ssim_std": 0.12982261180877686,
+      "lpips_mean": 0.14286048624664546,
+      "lpips_std": 0.10074375464825996
+    },
+    "Copy": {
+      "ssim_mean": 0.802951455116272,
+      "ssim_std": 0.14824332296848297,
+      "lpips_mean": 0.12852214142680168,
+      "lpips_std": 0.0868320845869793
+    }
+  },
+  "rank_sweep": {
+    "2": {
+      "ssim_mean": 0.8114842176437378,
+      "lpips_mean": 0.13197302743792533,
+      "n_lora_params": 142860,
+      "from_main_training": false
+    },
+    "4": {
+      "ssim_mean": 0.8246210217475891,
+      "lpips_mean": 0.14286048624664546,
+      "n_lora_params": 285696,
+      "from_main_training": true
+    },
+    "8": {
+      "ssim_mean": 0.8114842176437378,
+      "lpips_mean": 0.13197302743792533,
+      "n_lora_params": 571392,
+      "from_main_training": false
+    },
+    "16": {
+      "ssim_mean": 0.8114859461784363,
+      "lpips_mean": 0.1319735527038574,
+      "n_lora_params": 1142784,
+      "from_main_training": false
+    }
+  },
+  "training": {
+    "losses": [],
+    "l1_losses": [],
+    "lpips_losses": [],
+    "n_total_steps": 0
+  },
+  "checkpoints": {
+    "lora_best": "/home/ubuntu/vae_lora_best.pt"
+  },
+  "plots": [
+    "/home/ubuntu/e3_vae_lora/e3_training_curve.png",
+    "/home/ubuntu/e3_vae_lora/e3_pixel_comparison.png",
+    "/home/ubuntu/e3_vae_lora/e3_visual.png",
+    "/home/ubuntu/e3_vae_lora/e3_rank_sweep.png"
+  ],
+  "time_min": 9.385591204961141,
+  "cost_usd": 0.17206917209095426
+}
