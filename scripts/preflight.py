@@ -82,7 +82,8 @@ def main():
             log(f"CUDA available, {n_gpus} GPU(s)", "OK")
             for i in range(n_gpus):
                 name = torch.cuda.get_device_name(i)
-                mem_gb = torch.cuda.get_device_properties(i).total_mem / 1e9
+                props = torch.cuda.get_device_properties(i)
+                mem_gb = getattr(props, 'total_memory', getattr(props, 'total_mem', 0)) / 1e9
                 log(f"  GPU {i}: {name} ({mem_gb:.1f} GB)", "OK")
                 if mem_gb < 38:
                     log(f"  GPU {i} has < 40GB — VAE decode may OOM", "WARN")
@@ -102,11 +103,14 @@ def main():
     data_files = {
         "latents_2000videos.pt": {
             "required": True,
-            "expected_shapes": [(2000, 16, 9, 32, 32), (2000, 9, 16, 32, 32)],
+            "expected_shapes": [
+                (2000, 16, 9, 32, 32), (2000, 9, 16, 32, 32),
+                (1315, 16, 9, 32, 32), (1315, 9, 16, 32, 32),
+            ],
         },
         "aligned_video_slots.pt": {
             "required": True,
-            "expected_shapes": [(2000, 9, 64, 128)],
+            "expected_shapes": [(2000, 9, 64, 128), (1315, 9, 64, 128)],
         },
     }
 
