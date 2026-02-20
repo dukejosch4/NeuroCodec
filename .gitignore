@@ -17,61 +17,58 @@ remnote-mcp-plugin/
 marketing/
 demo_output/
 
-# Phase results (raw experiment outputs)
-phase_b_results/
-phase_b2_results/
+# Phase results (raw experiment outputs, now in results/)
+results/phase_b_results/
+results/phase_b2_results/
 
 # Log files
 *.log
-e*_output*.log
 
-# Experiment scripts (clean versions in scripts/)
-run_*.py
-run_*.sh
-start-*.sh
-stufe*.py
+# Experiment scripts (in experiments/, clean versions in scripts/)
+experiments/
 
-# Experiment result files in root (clean copies in results/)
-/c0_*
-/d0_*
-/d0b_*
-/d1_*
-/d2_*
-/e0_*
-/e1_*
-/e2_*
-/e2e_*
-/e3_*
-/e4_*
-/e5_*
-/e5b_*
-
+# Experiment result files — clean copies live in results/
 # Allow results subdirectories
+!results/
 !results/json/
 !results/json/*.json
 !results/figures/
 !results/figures/*.png
 !results/demo/
 !results/demo/*
+results/experiment_summary.md
+results/*.log
+results/*.txt
 
 # Jupyter notebooks (messy experiment notebooks)
-*.ipynb
+notebooks/
 
-# Generated documents
-*.docx
-*.txt
-!requirements.txt
-*.pdf
+# Generated documents (in docs/)
+docs/*.docx
+docs/*.txt
+docs/*.pdf
 
-# Markdown docs (not for paper repo)
-ANWENDUNGEN_UND_MARKTPOTENTIAL.md
-ARCHITEKTUR_VERBESSERUNGEN.md
-FORSCHUNGSLEITFADEN.md
-PROJEKT_WISSENSBASIS.md
-REMNOTE_BRAIN.md
-REMNOTE_BRAIN_GUIDE.md
-ROADMAP_WEG2_ENDTOEND.md
+# Markdown docs (supplementary, not for paper repo)
+docs/ANWENDUNGEN_UND_MARKTPOTENTIAL.md
+docs/ARCHITEKTUR_VERBESSERUNGEN.md
+docs/FORSCHUNGSLEITFADEN.md
+docs/PROJEKT_WISSENSBASIS.md
+docs/REMNOTE_BRAIN.md
+docs/REMNOTE_BRAIN_GUIDE.md
+docs/ROADMAP_WEG2_ENDTOEND.md
 # research_findings.md is included in repo
+!docs/research_findings.md
+
+# LaTeX build artifacts & compiled PDFs
+paper/*.aux
+paper/*.out
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.synctex.gz
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.pdf
 
 # Python
 __pycache__/

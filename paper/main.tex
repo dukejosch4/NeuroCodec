@@ -9,8 +9,8 @@
 \usepackage{multirow}
 \usepackage{hyperref}
 \usepackage{xcolor}
-\usepackage{algorithm}
-\usepackage{algorithmic}
+% \usepackage{algorithm}   % not used in current version
+% \usepackage{algorithmic} % not used in current version
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -29,7 +29,7 @@
 
 \author{
   Joscha H\"artel \\
-  \texttt{joscha@haertel.dev} % TODO: confirm email
+  \texttt{haertel.joscha@gmail.com}
 }
 
 \date{}
@@ -52,10 +52,12 @@ Our key insight is that adjacent video frames share the vast majority of
 their latent content, making residual updates
 ($L_{t+1} = L_t + \Delta$) fundamentally more efficient than full-frame
 decoding.
-Operating on CogVideoX latents from UCF-101, our hybrid system achieves
-a 36.8\% MSE reduction over the copy baseline with 518$\times$
-speedup over a 50-step UNet diffusion decoder, while maintaining
-stable multi-step rollouts (1.39$\times$ error ratio over 8 frames).
+Operating on CogVideoX latents from UCF-101, our system achieves
+a 36.8\% MSE reduction over the copy baseline (0.216 vs.\ 0.342) with
+over two orders of magnitude lower per-frame latency than a 50-step
+UNet diffusion decoder (1.98\,ms vs.\ 1{,}026\,ms on A100), while
+maintaining stable multi-step rollouts (1.39$\times$ error ratio,
+defined as MSE at frame~8 / MSE at frame~1).
 A spectral frequency-matching loss recovers suppressed latent variance
 (std ratio $0.55{\to}0.83$ average), reducing perceptual distance from
 LPIPS~0.223 to 0.177---within 3.5\% of the copy baseline's 0.171,
@@ -112,15 +114,19 @@ employs for efficient visual processing:
 \end{enumerate}
 
 While each principle has individually inspired machine learning
-architectures, no prior work combines all four as a unified blueprint
-for efficient video prediction.
+architectures, to our knowledge no prior work systematically combines
+all four within a single video prediction architecture.
+We use these principles as architectural design heuristics rather than
+faithful neural implementations.
 We propose \method{}, which instantiates these principles within the
 latent space of a pre-trained video VAE (CogVideoX~\cite{yang2024cogvideox}).
 
 Our contributions:
 \begin{itemize}
-\item We formalize why residual latent updates are provably at least as
-  good as full decoding (via the law of total variance, Section~\ref{sec:residual}).
+\item We provide information-theoretic motivation via the law of total
+  variance for why residual latent updates should outperform full
+  decoding when slots are not a sufficient statistic
+  (Section~\ref{sec:residual}), and confirm this empirically.
 \item We present a hybrid architecture that routes frames through
   residual or full decoding based on a learned boundary detector.
 \item We provide ablation experiments showing that the residual
@@ -128,8 +134,9 @@ Our contributions:
   225\%), while slot-based cross-attention is essential for rollout
   stability (3.16$\times$ error growth without slots vs.\ 1.39$\times$
   with).
-\item We demonstrate 518$\times$ speedup over a matched 50-step UNet
-  diffusion baseline (1.98\,ms vs.\ 1{,}026\,ms per frame).
+\item We demonstrate over two orders of magnitude lower per-frame
+  latency compared to a 50-step UNet diffusion baseline
+  (1.98\,ms at batch size~1 vs.\ 1{,}026\,ms at batch size~32).
 \item We systematically evaluate six improvement strategies (latent
   adapters, self-forcing, perceptual losses, variational residuals,
   channel weighting, and end-to-end pixel supervision), identifying
@@ -146,11 +153,12 @@ Our contributions:
 % Overview figure
 \begin{figure*}[t]
   \centering
+  \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[
-    node distance=1.2cm and 1.6cm,
-    block/.style={draw, rounded corners, minimum height=0.9cm,
-                  minimum width=2.0cm, align=center, font=\small},
-    data/.style={draw, minimum height=0.7cm, minimum width=1.4cm,
+    node distance=1.0cm and 1.2cm,
+    block/.style={draw, rounded corners, minimum height=0.8cm,
+                  minimum width=1.8cm, align=center, font=\small},
+    data/.style={draw, minimum height=0.6cm, minimum width=1.2cm,
                  align=center, font=\small\ttfamily},
     arr/.style={-{Stealth[length=5pt]}, thick},
     label/.style={font=\scriptsize\itshape, text=gray},
@@ -179,10 +187,10 @@ Our contributions:
 
     % Two branches
     \node[block, below left=1.0cm and 0.3cm of bd, fill=green!8,
-          minimum width=3.2cm] (res)
+          minimum width=2.8cm] (res)
           {ResidualDecoderV2\\{\scriptsize $L_t + \Delta$}};
     \node[block, below right=1.0cm and 0.3cm of bd, fill=yellow!15,
-          minimum width=2.8cm] (full)
+          minimum width=2.4cm] (full)
           {V3 Full Decoder\\{\scriptsize keyframe}};
 
     \draw[arr] (bd.south) -- ++(0,-0.3) -| (res.north)
@@ -206,7 +214,8 @@ Our contributions:
           {\ding{174} Event Seg.};
     \node[label, below=0.05cm of res, font=\scriptsize\itshape, text=gray]
           {\ding{175} Hierarchical Residual};
-  \end{tikzpicture}
+  \end{tikzpicture}%
+  }
   \caption{%
     \textbf{\method{} architecture.}
     Four neuroscience principles map to architectural components:
@@ -232,7 +241,8 @@ Each frame is represented as $N{=}1024$ tokens of dimension $d{=}16$.
 
 A Slot Attention module~\cite{locatello2020object} further compresses
 each frame into $K{=}64$ slots of dimension $d_s{=}128$, achieving
-$16\times$ token reduction.
+$16\times$ token count reduction (from 1024 to 64 tokens, with
+increased per-token dimension from 16 to 128).
 Slots are aligned across time via Hungarian matching on cosine
 similarity, improving temporal consistency from $0.365$ to $0.907$
 cosine similarity.
@@ -243,7 +253,8 @@ cosine similarity.
 A lightweight Transformer ($2$ layers, $4$ heads, $d{=}128$, 438K
 parameters) predicts $\hat{S}_{t+1} = f_\theta(S_t)$ in slot space.
 Operating on 64 tokens instead of 1024 yields a $256\times$ reduction
-in attention FLOPs and $30\times$ wall-clock speedup at batch size 32.
+in self-attention FLOPs ($64^2/1024^2$) and $30\times$ wall-clock
+speedup at batch size 32.
 
 \subsection{Event Boundary Detection}
 \label{sec:boundary}
@@ -272,7 +283,14 @@ By the law of total variance:
   \right]
 \label{eq:total_variance}
 \end{equation}
-Conditioning on $L_t$ can only reduce prediction variance.
+Conditioning on $L_t$ can only reduce (or maintain) prediction
+variance.
+This inequality is strict whenever $L_t$ carries information about
+$L_{t+1}$ beyond what $S_{t+1}$ provides.
+Since slots explain only 41.6\% of latent variance
+(Section~\ref{sec:slots}), $L_t$ provides substantial complementary
+information, making the residual formulation strictly advantageous
+in the infinite-capacity limit.
 This motivates our residual decoder.
 
 \paragraph{Architecture.}
@@ -370,7 +388,10 @@ Residual V2
 
 Table~\ref{tab:main_results} shows that residual prediction
 consistently outperforms both copy and full decoding across all splits.
-The improvement is largest on hard frames (45\% over copy),
+The pure residual decoder achieves the lowest overall MSE (0.216),
+while the hybrid system trades 1.8\% MSE for robustness at event
+boundaries via fallback to full decoding.
+The improvement over copy is largest on hard frames (45\%),
 where the slot-guided $\Delta$ captures scene dynamics that the copy
 baseline cannot.
 Notably, residual decoding outperforms the V3 full decoder even on hard
@@ -429,6 +450,17 @@ rollout (see Figure~\ref{fig:rollout}).
 \subsection{Multi-Step Rollout Stability}
 \label{sec:rollout}
 
+We evaluate rollout stability by autoregressively predicting 8 frames
+on 50 validation videos and measuring MSE at each step
+(Figure~\ref{fig:rollout}).
+The full system maintains a stability ratio of $1.39\times$
+(MSE at frame~8 / MSE at frame~1), outperforming the copy baseline
+($1.67\times$).
+Removing slot cross-attention causes catastrophic drift
+($3.16\times$), confirming that object-level structure is essential
+for temporally coherent multi-step prediction even though it slightly
+hurts single-step MSE (Table~\ref{tab:ablation}).
+
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[scale=0.85]
@@ -455,7 +487,9 @@ rollout (see Figure~\ref{fig:rollout}).
   \end{tikzpicture}
   \caption{%
     \textbf{Rollout error accumulation} over 8 predicted frames
-    (schematic from actual data, 50 validation videos).
+    (schematic illustration based on rollout experiments over 50
+    validation videos; stability ratios computed from actual data,
+    curve shapes are approximate).
     Stability ratio = MSE(frame~8) / MSE(frame~1).
     The full system maintains 1.39$\times$ stability, compared
     to 1.67$\times$ for copy.
@@ -467,6 +501,16 @@ rollout (see Figure~\ref{fig:rollout}).
 % --- Perceptual ---
 \subsection{Perceptual Quality}
 \label{sec:perceptual}
+
+To assess decoded frame quality, we pass predicted latents through the
+frozen CogVideoX VAE decoder and measure LPIPS, SSIM, and
+per-channel variance-ratio deviation (Table~\ref{tab:perceptual}).
+The spectral loss variant ($\beta{=}0.01$) closes 88\% of the LPIPS
+gap to the copy baseline (which uses ground-truth VAE encodings),
+reducing LPIPS from $0.223$ to $0.177$ compared to copy's $0.171$.
+Over 8-frame rollouts, accumulated error increases LPIPS to $0.308$,
+roughly $2\times$ the copy rollout ($0.154$), reflecting compounding
+off-manifold drift.
 
 \begin{table}[t]
 \centering
@@ -513,25 +557,38 @@ Copy (rollout)
 \subsection{Inference Speed}
 \label{sec:speed}
 
+Table~\ref{tab:speed} compares per-frame inference latency on an
+A100 GPU.
+Our hybrid system produces a frame prediction in $1.98$\,ms (batch
+size~1), compared to $1{,}026$\,ms for a matched UNet with 50
+denoising steps (batch size~32).
+Note that the different batch sizes make a direct throughput comparison
+difficult; the latency gap would narrow under equal batching.
+Nevertheless, the architectural difference---single-pass cross-attention
+vs.\ iterative denoising---yields a fundamental efficiency advantage.
+
 \begin{table}[t]
 \centering
 \caption{%
-  \textbf{Inference speed} on A100.
-  UNet times measured with a matched UNet2DModel (75.4M params) at batch
+  \textbf{Per-frame inference latency} on A100.
+  UNet times measured with a matched UNet2DModel (75.4M params,
+  matched in spatial resolution and channel count) at batch
   size 32; our method timed at batch size 1.
-  The comparison reflects total wall-clock time to produce one frame
-  prediction, but the different batch sizes mean the per-sample gap would
-  narrow under batching.
+  \textbf{Caveat:} The different batch sizes mean the per-sample
+  latency gap would narrow under equal batching conditions.
+  We report this comparison to illustrate the architectural
+  efficiency difference, not as a controlled throughput benchmark.
 }
 \label{tab:speed}
-\begin{tabular}{@{}lcc@{}}
+\begin{tabular}{@{}lccc@{}}
 \toprule
-Method & Time (ms) & Speedup \\
+Method & Batch Size & Latency (ms) & Ratio \\
 \midrule
-UNet 50-step (bs=32) & 1{,}026 & 1.0$\times$ \\
-UNet 20-step (bs=32) & 410 & 2.5$\times$ \\
-\textbf{Hybrid (Ours, bs=1)} & \textbf{1.98} & \textbf{518}$\times$ \\
+UNet 50-step & 32 & 1{,}026 & 1.0$\times$ \\
+UNet 20-step & 32 & 410 & 2.5$\times$ \\
+\textbf{Hybrid (Ours)} & 1 & \textbf{1.98} & \textbf{518}$\times$$^\dagger$ \\
 \bottomrule
+\multicolumn{4}{@{}l}{\scriptsize $^\dagger$Not directly comparable due to different batch sizes.}
 \end{tabular}
 \end{table}
 
@@ -605,14 +662,14 @@ the diminishing returns beyond $\beta{=}0.01$ do not justify the
 additional hyperparameters.
 
 % --- Negative Results ---
-\subsection{What Did Not Work}
+\subsection{Systematic Evaluation of Improvement Strategies}
 \label{sec:negative}
 
 We systematically evaluated six improvement strategies beyond the base
 system.
 Only spectral loss (Section~\ref{sec:loss}) yielded meaningful gains.
-We report the five negative results to save future researchers from
-repeating these experiments.
+We report the five negative results to benefit future work in this
+direction.
 
 \paragraph{Latent adapter (E1).}
 A per-channel affine transformation (32 parameters) applied to predicted
@@ -672,29 +729,58 @@ decoder itself (e.g., via LoRA fine-tuning) could address this gap.
 Slot Attention~\cite{locatello2020object} and its temporal extensions
 SAVi~\cite{kipf2022conditional} and SAVi++~\cite{elsayed2022savi++}
 learn object-centric representations from video.
-We use slots not for object discovery but as a compact dynamics space
-and spatial guidance signal for residual decoding.
+SlotFormer~\cite{wu2023slotformer} applies a Transformer to predict
+future slot states and decodes them into frames; STEVE~\cite{singh2022steve}
+extends slots to naturalistic videos.
+We differ from SlotFormer in two key ways: (1)~we predict residual
+updates to the previous \emph{latent frame} rather than decoding
+slots from scratch, and (2)~we operate in a pre-trained VAE latent
+space rather than training an autoencoder end-to-end.
 
 \paragraph{Video prediction.}
 SimVP~\cite{gao2022simvp}, PredRNN~\cite{wang2022predrnn}, and
 TAU~\cite{tan2023temporal} predict future frames deterministically.
-Unlike these methods, we predict in a pre-trained VAE latent space,
-leveraging its rich representation without training an encoder.
+VideoGPT~\cite{yan2021videogpt} and TECO~\cite{yan2023teco}
+use discrete latent codes with Transformer-based prediction.
+Unlike these methods, we predict continuous residual updates in a
+pre-trained VAE latent space, leveraging its rich representation
+without training an encoder.
 
 \paragraph{Latent dynamics and neural video codecs.}
-SRVP~\cite{franceschi2020stochastic} learns residual dynamics in latent
-space.
+SRVP~\cite{franceschi2020stochastic} learns stochastic residual
+dynamics in a jointly-trained latent space.
 GNVC~\cite{ho2024gnvc} uses neural compression with predictive
 correction.
 Our work shares the residual update principle but uniquely combines it
-with slot-based spatial guidance and learned event segmentation.
+with slot-based spatial guidance and learned event segmentation in a
+\emph{frozen} pre-trained VAE space.
+
+\paragraph{Latent representation learning.}
+Unified Latents~\cite{heek2026unified} jointly trains encoders and
+diffusion-based decoders with diffusion prior regularization, providing
+a tight upper bound on the latent bitrate.
+Because their diffusion decoder is trained to map noisy inputs to
+clean outputs, we hypothesize that such decoders are more robust to
+distributional shift than deterministic decoders---directly relevant
+to our off-manifold bottleneck (Section~\ref{sec:limitations}).
+While their framework requires joint training from scratch, the
+principle of using a diffusion-based decoder to handle off-distribution
+latents offers a promising direction for systems like ours that predict
+in frozen VAE spaces.
 
 \paragraph{Predictive coding in machine learning.}
 The predictive coding framework~\cite{rao1999predictive,friston2005theory}
 has inspired architectures for vision~\cite{lotter2017deep} and
 language~\cite{caucheteux2023evidence}.
 We operationalize four specific predictions from this framework as
-concrete architectural choices.
+concrete architectural design heuristics.
+
+\paragraph{World models.}
+Recent large-scale world models such as
+Cosmos~\cite{nvidia2025cosmos} and Genie~\cite{bruce2024genie}
+generate video through autoregressive or diffusion-based approaches.
+Our work is complementary: the residual prediction principle could
+serve as an efficiency layer within such systems.
 
 % ====================================================================
 % 5. LIMITATIONS & FUTURE WORK
@@ -703,6 +789,9 @@ concrete architectural choices.
 \label{sec:limitations}
 
 \paragraph{Limitations.}
+We omit FID and FVD because our validation set (10 videos $\times$ 8
+frames) provides insufficient samples for reliable distributional
+metrics; we plan to report these on the full UCF-101 test set.
 Our evaluation is limited to UCF-101 with CogVideoX latents.
 The system performs \emph{prediction} (given frame~0, predict
 frames~1--8), not \emph{generation} (text $\to$ video).
@@ -720,7 +809,21 @@ of any system that predicts in a pre-trained VAE's latent space without
 adapting the decoder.
 
 \paragraph{Future directions.}
-The most promising extension is \textbf{conditional residual generation}:
+To address the off-manifold bottleneck, we see two complementary
+strategies:
+(1)~\textbf{Decoder adaptation} via lightweight LoRA fine-tuning of the
+VAE decoder on paired (predicted latent, ground-truth pixel) data,
+teaching the decoder to tolerate our prediction distribution; and
+(2)~\textbf{diffusion-based decoding}, inspired by Unified
+Latents~\cite{heek2026unified}, where a small diffusion decoder
+(5--10 steps) replaces the deterministic VAE decoder entirely.
+Since diffusion decoders are trained to map noisy inputs to clean
+outputs, we hypothesize that they are more tolerant of the
+distributional shift between predicted and ground-truth latents than
+deterministic decoders.
+
+Beyond decoder adaptation, the most impactful extension is
+\textbf{conditional residual generation}:
 replacing slot conditioning with text embeddings (CLIP/T5) and using the
 residual principle to accelerate existing video diffusion models.
 If frame~1 is generated conventionally and frames~2--$N$ via
@@ -742,8 +845,9 @@ Our key finding is that \textbf{residual latent updates}
 consistently outperform both copy baselines and full-frame decoding ---
 even on event boundaries where the previous frame provides a poor
 starting point.
-This confirms the mathematical intuition from the law of total variance:
-conditioning on the previous latent can only help.
+This is consistent with the information-theoretic intuition from the
+law of total variance: conditioning on the previous latent provides
+complementary information that slots alone do not capture.
 
 A spectral frequency-matching loss recovers 56\% of the variance
 suppressed by pure MSE training, bringing perceptual quality (LPIPS
@@ -759,8 +863,9 @@ VAE latent space lie off the decoder's data manifold, creating a
 perceptual quality ceiling that no latent-space loss can overcome.
 We believe this \textbf{off-manifold bottleneck} is a general challenge
 for any latent-space prediction system and suggest that future work
-should either co-train the decoder or employ lightweight decoder
-adaptation (e.g., LoRA).
+should employ lightweight decoder adaptation (e.g., LoRA) or
+diffusion-based decoding~\cite{heek2026unified}, which we hypothesize
+to be more tolerant of distributional shift in latent space.
 We hope this work demonstrates the value of neuroscience principles not
 as loose metaphors but as actionable architectural blueprints.
 
@@ -769,6 +874,11 @@ as loose metaphors but as actionable architectural blueprints.
 % ====================================================================
 \bibliographystyle{plain}
 \begin{thebibliography}{99}
+
+\bibitem{bruce2024genie}
+J.~Bruce \textit{et al.}
+\newblock Genie: Generative interactive environments.
+\newblock \textit{ICML}, 2024.
 
 \bibitem{bengio2015scheduled}
 S.~Bengio \textit{et al.}
@@ -805,6 +915,11 @@ Z.~Gao \textit{et al.}
 \newblock SimVP: Simpler yet better video prediction.
 \newblock \textit{CVPR}, 2022.
 
+\bibitem{heek2026unified}
+J.~Heek, E.~Hoogeboom, T.~Mensink, and T.~Salimans.
+\newblock Unified Latents: How to train your latents.
+\newblock \textit{arXiv:2602.17270}, 2026.
+
 \bibitem{ho2022video}
 J.~Ho \textit{et al.}
 \newblock Video Diffusion Models.
@@ -830,6 +945,11 @@ W.~Lotter, G.~Kreiman, and D.~Cox.
 \newblock Deep predictive coding networks for video prediction and unsupervised learning.
 \newblock \textit{ICLR}, 2017.
 
+\bibitem{nvidia2025cosmos}
+NVIDIA.
+\newblock Cosmos World Foundation Models.
+\newblock \textit{Technical Report}, 2025.
+
 \bibitem{olshausen1996emergence}
 B.~Olshausen and D.~Field.
 \newblock Emergence of simple-cell receptive field properties by learning a sparse code for natural images.
@@ -839,6 +959,11 @@ B.~Olshausen and D.~Field.
 R.~Rao and D.~Ballard.
 \newblock Predictive coding in the visual cortex.
 \newblock \textit{Nature Neuroscience}, 2(1):79--87, 1999.
+
+\bibitem{singh2022steve}
+G.~Singh \textit{et al.}
+\newblock Simple unsupervised object-centric learning for complex and naturalistic videos.
+\newblock \textit{NeurIPS}, 2022.
 
 \bibitem{soomro2012ucf101}
 K.~Soomro, A.~R.~Zamir, and M.~Shah.
@@ -850,6 +975,11 @@ C.~Tan \textit{et al.}
 \newblock Temporal attention unit: Towards efficient spatiotemporal predictive learning.
 \newblock \textit{CVPR}, 2023.
 
+\bibitem{wu2023slotformer}
+Z.~Wu \textit{et al.}
+\newblock SlotFormer: Unsupervised visual dynamics simulation with object-centric models.
+\newblock \textit{ICLR}, 2023.
+
 \bibitem{wang2022predrnn}
 Y.~Wang \textit{et al.}
 \newblock PredRNN: A recurrent neural network for spatiotemporal predictive learning.
@@ -859,6 +989,16 @@ Y.~Wang \textit{et al.}
 T.~Wiegand \textit{et al.}
 \newblock Overview of the H.264/AVC video coding standard.
 \newblock \textit{IEEE TCSVT}, 13(7):560--576, 2003.
+
+\bibitem{yan2021videogpt}
+W.~Yan \textit{et al.}
+\newblock VideoGPT: Video generation using VQ-VAE and Transformers.
+\newblock \textit{arXiv:2104.10157}, 2021.
+
+\bibitem{yan2023teco}
+W.~Yan \textit{et al.}
+\newblock Temporally consistent Transformers for video generation.
+\newblock \textit{ICML}, 2023.
 
 \bibitem{yang2024cogvideox}
 Z.~Yang \textit{et al.}
