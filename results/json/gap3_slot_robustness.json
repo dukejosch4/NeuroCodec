@@ -1,0 +1,116 @@
+{
+  "experiment_1_slot_source": {
+    "gt_slots": {
+      "mse_mean": 0.20948729015886783,
+      "mse_std": 0.0895942820589593,
+      "n_pairs": 400
+    },
+    "reextracted_gt": {
+      "mse_mean": 0.21156527914106846,
+      "mse_std": 0.09077617103058078,
+      "n_pairs": 400
+    },
+    "predicted_slots": {
+      "mse_mean": 0.23119492979720235,
+      "mse_std": 0.11022888009273209,
+      "n_pairs": 400
+    }
+  },
+  "slot_cosine_similarity": {
+    "gt_vs_reextracted": {
+      "mean": 0.9969775566458702,
+      "std": 0.00569749282413872
+    },
+    "gt_vs_from_predicted": {
+      "mean": 0.9947008718550205,
+      "std": 0.006495694081200704
+    }
+  },
+  "experiment_2_sensitivity": {
+    "sigma_0.0": {
+      "sigma_relative": 0.0,
+      "sigma_absolute": 0.0,
+      "mse_mean": 0.22982609290629624,
+      "mse_std": 0.09320033066122603,
+      "slot_cosine_mean": 0.997351361811161,
+      "n_pairs": 160
+    },
+    "sigma_0.01": {
+      "sigma_relative": 0.01,
+      "sigma_absolute": 0.012417336702346802,
+      "mse_mean": 0.22983063887804747,
+      "mse_std": 0.09311407988770146,
+      "slot_cosine_mean": 0.9973461378365756,
+      "n_pairs": 160
+    },
+    "sigma_0.02": {
+      "sigma_relative": 0.02,
+      "sigma_absolute": 0.024834673404693603,
+      "mse_mean": 0.22981896144337952,
+      "mse_std": 0.0930752027760345,
+      "slot_cosine_mean": 0.9973367497324943,
+      "n_pairs": 160
+    },
+    "sigma_0.05": {
+      "sigma_relative": 0.05,
+      "sigma_absolute": 0.06208668351173401,
+      "mse_mean": 0.23000136646442115,
+      "mse_std": 0.09319425804944247,
+      "slot_cosine_mean": 0.9973045844584704,
+      "n_pairs": 160
+    },
+    "sigma_0.1": {
+      "sigma_relative": 0.1,
+      "sigma_absolute": 0.12417336702346803,
+      "mse_mean": 0.23003943297080695,
+      "mse_std": 0.09336491224506648,
+      "slot_cosine_mean": 0.9972575422376394,
+      "n_pairs": 160
+    },
+    "sigma_0.2": {
+      "sigma_relative": 0.2,
+      "sigma_absolute": 0.24834673404693605,
+      "mse_mean": 0.23108915789052845,
+      "mse_std": 0.09387958275128092,
+      "slot_cosine_mean": 0.9969811134040356,
+      "n_pairs": 160
+    }
+  },
+  "experiment_3_rollout": {
+    "gt_slots": {
+      "per_frame_mse": [
+        0.0,
+        0.18259438052773475,
+        0.23003348658482234,
+        0.2697479943434397,
+        0.303285817305247,
+        0.3219885086019834,
+        0.34209892600774766,
+        0.36091154913107554,
+        0.37293321937322615
+      ],
+      "stability": 2.0424134537731864,
+      "n_videos": 30
+    },
+    "online_slots": {
+      "per_frame_mse": [
+        0.0,
+        0.20972588857014973,
+        0.26764024471243225,
+        0.33260831733544666,
+        0.38295680830876033,
+        0.42062023828427,
+        0.44901929249366124,
+        0.4794774125019709,
+        0.5103599607944489
+      ],
+      "stability": 2.433461907225355,
+      "n_videos": 30
+    }
+  },
+  "metadata": {
+    "n_test_videos": 50,
+    "latent_std": 1.2417336702346802,
+    "gpu": "NVIDIA A100-SXM4-40GB"
+  }
+}
