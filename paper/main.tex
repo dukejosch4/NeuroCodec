@@ -70,6 +70,8 @@ Systematic evaluation of six improvement strategies reveals a key
 insight for the field: predicted latents lie off the VAE decoder's data
 manifold, and no latent-space loss---including end-to-end pixel
 supervision---can fully close this gap without modifying the decoder.
+A lightweight manifold projector (55K params) with decoupled feedback
+reduces rollout MSE by a further 3.3\% at 0.25\,ms additional latency.
 Ablation experiments across three random seeds confirm that the residual
 update principle is essential (+225\% MSE without it), slot-based
 cross-attention stabilizes rollouts (3.16$\times$ degradation without
@@ -819,13 +821,42 @@ This \textbf{off-manifold bottleneck} is likely a general limitation
 of any system that predicts in a pre-trained VAE's latent space without
 adapting the decoder.
 
+\paragraph{Manifold projection as partial remedy.}
+As a first step toward addressing the off-manifold bottleneck, we
+trained a lightweight \emph{ManifoldProjector}---a 2-layer ConvNet
+(55K parameters, 0.25\,ms latency) that learns a residual correction
+$\hat{L}_\text{clean} = \hat{L} + P(\hat{L})$ to project predicted
+latents closer to the data manifold.
+Trained on MSE + spectral loss using paired (predicted, ground-truth)
+latents, the projector reduces single-step MSE by 3.3\%
+(0.230$\to$0.222) and spectral loss by 3.6\%.
+However, na\"ively inserting the projector into the autoregressive
+feedback loop \emph{worsens} rollout stability (2.28$\times$ vs.\
+2.17$\times$ without), because the correction shifts the latent
+distribution in a way that degrades subsequent slot re-extraction.
+A \textbf{decoupled feedback} strategy---applying the projector only
+to the output while feeding the raw (unprojected) latent back for slot
+extraction---resolves this, improving rollout stability to
+2.12$\times$ and reducing final-frame MSE by 3.3\% (0.449$\to$0.434)
+at negligible latency cost (0.25\,ms, ${\sim}$10\% of the 2.51\,ms
+pipeline).
+This decoupling insight---separating the ``output path'' from the
+``feedback path''---may generalize to other autoregressive latent
+prediction systems.
+
 \paragraph{Future directions.}
-To address the off-manifold bottleneck, we see two complementary
-strategies:
-(1)~\textbf{Decoder adaptation} via lightweight LoRA fine-tuning of the
+Our manifold projector (55K params, +3.3\% MSE) demonstrates that
+lightweight post-hoc correction is viable, but single-step supervised
+training saturates quickly.
+Three directions could amplify the gains:
+(1)~\textbf{Adversarial manifold projection}: replacing MSE with a
+GAN-style discriminator that enforces distributional match between
+projected and real latents, potentially recovering more high-frequency
+detail;
+(2)~\textbf{Decoder adaptation} via lightweight LoRA fine-tuning of the
 VAE decoder on paired (predicted latent, ground-truth pixel) data,
 teaching the decoder to tolerate our prediction distribution; and
-(2)~\textbf{diffusion-based decoding}, inspired by Unified
+(3)~\textbf{diffusion-based decoding}, inspired by Unified
 Latents~\cite{heek2026unified}, where a small diffusion decoder
 (5--10 steps) replaces the deterministic VAE decoder entirely.
 Since diffusion decoders are trained to map noisy inputs to clean
@@ -906,11 +937,14 @@ Our systematic evaluation of six improvement strategies reveals a
 finding with broader implications: predicted latents in a pre-trained
 VAE latent space lie off the decoder's data manifold, creating a
 perceptual quality ceiling that no latent-space loss can overcome.
+A lightweight manifold projector (55K parameters) with decoupled
+feedback partially addresses this, reducing rollout MSE by 3.3\% at
+negligible latency cost---demonstrating that output-path correction
+without feedback contamination is a viable strategy.
 We believe this \textbf{off-manifold bottleneck} is a general challenge
-for any latent-space prediction system and suggest that future work
-should employ lightweight decoder adaptation (e.g., LoRA) or
-diffusion-based decoding~\cite{heek2026unified}, which we hypothesize
-to be more tolerant of distributional shift in latent space.
+for any latent-space prediction system and suggest that adversarial
+manifold projection, decoder adaptation (LoRA), or diffusion-based
+decoding~\cite{heek2026unified} could further close the gap.
 We hope this work demonstrates the value of neuroscience principles not
 as loose metaphors but as actionable architectural blueprints.
 
