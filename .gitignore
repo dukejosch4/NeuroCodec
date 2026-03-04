@@ -93,10 +93,40 @@ Thumbs.db
 # Environment
 .env
 .venv/
+.venv-rag/
 venv/
+
+# RAG server data
+rag/.chromadb/
 
 # Jupyter
 .ipynb_checkpoints/
 
 # Claude Code
 .claude/
+.agtx/
+
+# AI Lab orchestrator state
+.ai-lab/
+.mcp.json
+
+# Build artifacts
+neurocodec-arxiv.tar.gz
+*.tar.gz
+
+# Internal tooling
+orchestrator/
+rag/
+paper-erklaert/
+learning-app/
+learning-questions.md
+learning-roadmap.md
+requirements-rag.txt
+
+# Shell scripts (internal)
+src/launch_phase0.sh
+src/monitor_and_launch.sh
+
+# PaperBanana generated figures (originals in assets/)
+results/paperbanana_figures/
+CLAUDE.md

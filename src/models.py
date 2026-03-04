@@ -1,6 +1,8 @@
 """NeuroCodec model definitions.
 
 All architectures required for the hybrid video latent prediction system:
+- SlotAttentionV2: iterative slot attention encoder
+- SlotLatentAutoencoderV2: slot-based latent autoencoder (534K params)
 - ResidualDecoderV2: 3-layer cross-attention residual decoder (1.43M params)
 - DynamicsTransformer: lightweight slot dynamics predictor (438K params)
 - BoundaryDetector: MLP for EASY/HARD frame classification
@@ -9,6 +11,136 @@ All architectures required for the hybrid video latent prediction system:
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+
+class SlotAttentionV2(nn.Module):
+    """Iterative slot attention module.
+
+    Compresses N input tokens into K slots via iterative attention.
+    Uses GRU updates + MLP refinement per iteration.
+    """
+
+    def __init__(self, n_slots, slot_dim, input_dim, n_iter=5, hidden_dim=128):
+        super().__init__()
+        self.n_slots = n_slots
+        self.n_iter = n_iter
+        self.slot_dim = slot_dim
+        self.slot_mu = nn.Parameter(torch.randn(1, 1, slot_dim))
+        self.slot_log_sigma = nn.Parameter(torch.zeros(1, 1, slot_dim))
+        self.to_q = nn.Linear(slot_dim, slot_dim)
+        self.to_k = nn.Linear(input_dim, slot_dim)
+        self.to_v = nn.Linear(input_dim, slot_dim)
+        self.gru = nn.GRUCell(slot_dim, slot_dim)
+        self.norm_input = nn.LayerNorm(input_dim)
+        self.norm_slots = nn.LayerNorm(slot_dim)
+        self.norm_out = nn.LayerNorm(slot_dim)
+        self.mlp = nn.Sequential(
+            nn.Linear(slot_dim, hidden_dim), nn.ReLU(), nn.Linear(hidden_dim, slot_dim)
+        )
+        self.scale = slot_dim ** -0.5
+
+    def forward(self, x):
+        B, N_tok, _ = x.shape
+        slots = (
+            self.slot_mu.expand(B, self.n_slots, -1)
+            + self.slot_log_sigma.exp().expand(B, self.n_slots, -1)
+            * torch.randn(B, self.n_slots, self.slot_dim, device=x.device)
+        )
+        x = self.norm_input(x)
+        k = self.to_k(x)
+        v = self.to_v(x)
+        for _ in range(self.n_iter):
+            sp = slots
+            slots = self.norm_slots(slots)
+            q = self.to_q(slots)
+            attn = (torch.einsum("bsd,bnd->bsn", q, k) * self.scale).softmax(dim=1) + 1e-8
+            attn = attn / attn.sum(dim=-1, keepdim=True)
+            slots = self.gru(
+                torch.einsum("bsn,bnd->bsd", attn, v).reshape(-1, self.slot_dim),
+                sp.reshape(-1, self.slot_dim),
+            ).reshape(B, self.n_slots, self.slot_dim)
+            slots = slots + self.mlp(self.norm_out(slots))
+        return slots
+
+
+class SlotLatentAutoencoderV2(nn.Module):
+    """Slot-based latent autoencoder (534K params).
+
+    Encodes 1024 latent tokens (16d) into 64 slots (128d) via slot attention,
+    then decodes back via 2-layer cross-attention.
+
+    Architecture:
+        Encoder: LayerNorm -> 2-layer MLP (16->128) -> SlotAttentionV2
+        Decoder: 2x cross-attention (slots->tokens) + MLP + output proj
+    """
+
+    def __init__(self, n_slots=64, slot_dim=128, input_dim=16, n_tokens=1024, n_iter=5):
+        super().__init__()
+        self.n_tokens = n_tokens
+        self.slot_dim = slot_dim
+        self.pos_embed = nn.Parameter(torch.randn(1, n_tokens, input_dim) * 0.02)
+        self.encoder_norm = nn.LayerNorm(input_dim)
+        self.encoder_proj = nn.Sequential(
+            nn.Linear(input_dim, slot_dim), nn.GELU(), nn.Linear(slot_dim, slot_dim)
+        )
+        self.slot_attention = SlotAttentionV2(
+            n_slots=n_slots, slot_dim=slot_dim, input_dim=slot_dim, n_iter=n_iter
+        )
+        # Decoder: 2-layer cross-attention from learned queries attending to slots
+        self.decoder_pos = nn.Parameter(torch.randn(1, n_tokens, slot_dim) * 0.02)
+        self.cross_norm_q1 = nn.LayerNorm(slot_dim)
+        self.cross_norm_kv1 = nn.LayerNorm(slot_dim)
+        self.cross_q1 = nn.Linear(slot_dim, slot_dim)
+        self.cross_k1 = nn.Linear(slot_dim, slot_dim)
+        self.cross_v1 = nn.Linear(slot_dim, slot_dim)
+        self.decoder_mlp = nn.Sequential(
+            nn.LayerNorm(slot_dim),
+            nn.Linear(slot_dim, slot_dim * 2),
+            nn.GELU(),
+            nn.Linear(slot_dim * 2, slot_dim),
+        )
+        self.cross_norm_q2 = nn.LayerNorm(slot_dim)
+        self.cross_norm_kv2 = nn.LayerNorm(slot_dim)
+        self.cross_q2 = nn.Linear(slot_dim, slot_dim)
+        self.cross_k2 = nn.Linear(slot_dim, slot_dim)
+        self.cross_v2 = nn.Linear(slot_dim, slot_dim)
+        self.output_proj = nn.Sequential(
+            nn.LayerNorm(slot_dim),
+            nn.Linear(slot_dim, slot_dim),
+            nn.GELU(),
+            nn.Linear(slot_dim, input_dim),
+        )
+        self.scale = slot_dim ** -0.5
+
+    def encode(self, x):
+        """Encode tokens to slots. x: [B, 1024, 16] -> [B, 64, 128]"""
+        return self.slot_attention(self.encoder_proj(self.encoder_norm(x + self.pos_embed)))
+
+    def decode(self, slots):
+        """Decode slots back to tokens. slots: [B, 64, 128] -> [B, 1024, 16]"""
+        # Layer 1: cross-attention
+        queries = self.decoder_pos.expand(slots.shape[0], -1, -1)
+        q = self.cross_q1(self.cross_norm_q1(queries))
+        k = self.cross_k1(self.cross_norm_kv1(slots))
+        v = self.cross_v1(self.cross_norm_kv1(slots))
+        attn = torch.einsum("bnd,bsd->bns", q, k) * self.scale
+        attn = attn.softmax(dim=-1)
+        x = queries + torch.einsum("bns,bsd->bnd", attn, v)
+        x = x + self.decoder_mlp(x)
+        # Layer 2: cross-attention
+        q2 = self.cross_q2(self.cross_norm_q2(x))
+        k2 = self.cross_k2(self.cross_norm_kv2(slots))
+        v2 = self.cross_v2(self.cross_norm_kv2(slots))
+        attn2 = torch.einsum("bnd,bsd->bns", q2, k2) * self.scale
+        attn2 = attn2.softmax(dim=-1)
+        x = x + torch.einsum("bns,bsd->bnd", attn2, v2)
+        return self.output_proj(x)
+
+    def forward(self, x):
+        """Full autoencoder pass. x: [B, 1024, 16] -> (recon, slots)"""
+        slots = self.encode(x)
+        recon = self.decode(slots)
+        return recon, slots
 
 
 class ResidualCrossAttnLayer(nn.Module):

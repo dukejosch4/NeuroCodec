@@ -1,0 +1,9 @@
+{
+  "phase": "latent_validation",
+  "total_files": 220847,
+  "checked": 1000,
+  "nan_count": 0,
+  "inf_count": 0,
+  "latent_mean": 0.1411372274160385,
+  "latent_std": 1.1477980613708496
+}
