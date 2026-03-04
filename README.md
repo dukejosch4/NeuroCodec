@@ -80,7 +80,7 @@ The architecture generalizes to SSv2 (220K videos, 2.65M frame pairs) **without 
 <p align="center">
   <img src="assets/rollout_strip_00.png" width="700">
   <br>
-  <em>8-frame autoregressive rollout. The system maintains structural coherence, but accumulated<br>off-manifold drift causes softening — a fundamental limitation of frozen VAE decoders, not of the prediction itself.</em>
+  <em>8-frame autoregressive rollout. The system maintains structural coherence, but accumulated<br>off-manifold drift causes softening — <b>a fundamental limitation of frozen VAE decoders, not of the prediction itself.</b></em>
 </p>
 
 ## Key Findings
