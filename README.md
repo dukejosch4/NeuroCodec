@@ -74,13 +74,13 @@ The architecture generalizes to SSv2 (220K videos, 2.65M frame pairs) **without 
 <p align="center">
   <img src="results/demo/video_00_comparison.gif" width="700">
   <br>
-  <em>Ground Truth (top) vs. NeuroCodec prediction (bottom)</em>
+  <em>Ground Truth (top) vs. NeuroCodec prediction (bottom). Predictions achieve strong latent-space metrics<br>(36.8% lower MSE), but pixel reconstructions show progressive blurring due to the off-manifold bottleneck (see below).</em>
 </p>
 
 <p align="center">
   <img src="assets/rollout_strip_00.png" width="700">
   <br>
-  <em>8-frame autoregressive rollout</em>
+  <em>8-frame autoregressive rollout. The system maintains structural coherence, but accumulated<br>off-manifold drift causes softening — a fundamental limitation of frozen VAE decoders, not of the prediction itself.</em>
 </p>
 
 ## Key Findings
