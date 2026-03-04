@@ -166,6 +166,10 @@ NeuroCodec/
 }
 ```
 
+## Acknowledgments
+
+Built with [Research Brain](https://github.com/dukejosch4/research-brain) — a persistent cognitive architecture for AI-assisted research with Claude Code.
+
 ## License
 
 MIT
