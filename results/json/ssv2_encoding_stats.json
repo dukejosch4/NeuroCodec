@@ -1,0 +1,9 @@
+{
+  "phase": "encode",
+  "total_videos": 220847,
+  "total_encoded": 220847,
+  "newly_encoded": 220847,
+  "skipped": 0,
+  "time_hours": 17.21530398991373,
+  "rate_videos_per_sec": 3.563479850534798
+}

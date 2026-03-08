@@ -307,7 +307,6 @@ def run_encode(args):
             latents = encode_videos(vae, batch_frames, scaling_factor)
 
             for j, vid_id in enumerate(batch_ids):
-                import numpy as np
                 np.save(LATENT_DIR / f"{vid_id}.npy", latents[j].cpu().numpy().astype(np.float16))
                 encoded_count += 1
         except RuntimeError as e:
@@ -325,9 +324,21 @@ def run_encode(args):
             rate = encoded_count / elapsed if elapsed > 0 else 0
             done = len(existing) + encoded_count
             eta = (total - done) / rate / 3600 if rate > 0 else 0
+
+            # Disk space guard
+            import shutil
+            _, _, free = shutil.disk_usage(str(LATENT_DIR))
+            free_gb = free / (1024 ** 3)
             print(f"  Encoded: {done}/{total} "
                   f"({rate:.1f} vid/s, ~{eta:.1f}h remaining, "
+                  f"disk: {free_gb:.0f}GB free, "
                   f"skipped: {skipped_count})", flush=True)
+            if free_gb < 10:
+                print(f"\n  DISK SPACE CRITICAL: {free_gb:.1f}GB free. "
+                      f"Stopping encoding to prevent full disk.")
+                print(f"  Encoded {done}/{total} videos so far. "
+                      f"Resume later — already-encoded files will be skipped.")
+                break
 
     elapsed = time.time() - t_start
     print(f"\n  Done! Encoded {encoded_count} videos in {elapsed / 3600:.1f}h")

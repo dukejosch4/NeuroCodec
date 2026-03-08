@@ -1,0 +1,134 @@
+{
+  "phase": "projector_training",
+  "dataset": "ssv2",
+  "n_train": 17000,
+  "n_val": 3000,
+  "n_params": 55440,
+  "baseline_mse": 0.215707927942276,
+  "best_val_mse": 0.20244162591795126,
+  "improvement_pct": 6.15012259905201,
+  "training_minutes": 10.17693620522817,
+  "history": [
+    {
+      "epoch": 1,
+      "val_mse": 0.2113900308807691,
+      "improvement_pct": 2.001733131784744
+    },
+    {
+      "epoch": 2,
+      "val_mse": 0.20751596304277578,
+      "improvement_pct": 3.7977115526752536
+    },
+    {
+      "epoch": 3,
+      "val_mse": 0.20638848779102167,
+      "improvement_pct": 4.320397604370029
+    },
+    {
+      "epoch": 4,
+      "val_mse": 0.2058151060094436,
+      "improvement_pct": 4.5862115626458255
+    },
+    {
+      "epoch": 5,
+      "val_mse": 0.20520928439994654,
+      "improvement_pct": 4.867064294984525
+    },
+    {
+      "epoch": 10,
+      "val_mse": 0.20435567883153757,
+      "improvement_pct": 5.262787148822978
+    },
+    {
+      "epoch": 15,
+      "val_mse": 0.2038088838259379,
+      "improvement_pct": 5.516275748345379
+    },
+    {
+      "epoch": 20,
+      "val_mse": 0.20449756955107054,
+      "improvement_pct": 5.197008055357788
+    },
+    {
+      "epoch": 25,
+      "val_mse": 0.20313797518610954,
+      "improvement_pct": 5.82730216551438
+    },
+    {
+      "epoch": 30,
+      "val_mse": 0.2040128204971552,
+      "improvement_pct": 5.421732783159672
+    },
+    {
+      "epoch": 35,
+      "val_mse": 0.20371376598874727,
+      "improvement_pct": 5.560371409593435
+    },
+    {
+      "epoch": 40,
+      "val_mse": 0.2034275078525146,
+      "improvement_pct": 5.693077768123422
+    },
+    {
+      "epoch": 45,
+      "val_mse": 0.2027636126925548,
+      "improvement_pct": 6.000852807405921
+    },
+    {
+      "epoch": 50,
+      "val_mse": 0.20274479625125727,
+      "improvement_pct": 6.009575918084797
+    },
+    {
+      "epoch": 55,
+      "val_mse": 0.20337256354590258,
+      "improvement_pct": 5.718549389466299
+    },
+    {
+      "epoch": 60,
+      "val_mse": 0.20277445514996847,
+      "improvement_pct": 5.995826354499389
+    },
+    {
+      "epoch": 65,
+      "val_mse": 0.20252617510656515,
+      "improvement_pct": 6.1109264557204
+    },
+    {
+      "epoch": 70,
+      "val_mse": 0.2034894209355116,
+      "improvement_pct": 5.66437549297405
+    },
+    {
+      "epoch": 75,
+      "val_mse": 0.20307638868689537,
+      "improvement_pct": 5.855853039745885
+    },
+    {
+      "epoch": 80,
+      "val_mse": 0.20258764115472636,
+      "improvement_pct": 6.08243142137116
+    },
+    {
+      "epoch": 85,
+      "val_mse": 0.20253177732229233,
+      "improvement_pct": 6.10832932552653
+    },
+    {
+      "epoch": 90,
+      "val_mse": 0.2027090061455965,
+      "improvement_pct": 6.026167846810915
+    },
+    {
+      "epoch": 95,
+      "val_mse": 0.20269930052260557,
+      "improvement_pct": 6.030667274849344
+    },
+    {
+      "epoch": 100,
+      "val_mse": 0.20244162591795126,
+      "improvement_pct": 6.15012259905201
+    }
+  ],
+  "gpu": "NVIDIA A100-SXM4-40GB"
+}
